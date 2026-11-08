@@ -1,4 +1,4 @@
-# 또래픽 — 토스 미니앱(앱인토스) 제출 체크리스트
+# 오늘의 화제 — 토스 미니앱(앱인토스) 제출 체크리스트
 
 마지막 정리: 2026-11-08
 
@@ -6,12 +6,12 @@
 
 | 순서 | 할 일 | 어디서 |
 |---|---|---|
-| 1 | GitHub 저장소에 코드 올리기 (Claude가 도와줌) | 터미널 |
-| 2 | 저장소 **Settings → Secrets and variables → Actions** 에 `YOUTUBE_API_KEY` 추가 (선택: `ANTHROPIC_API_KEY`) | GitHub |
-| 3 | 저장소 **Settings → Pages → Source** 를 **GitHub Actions** 로 | GitHub |
-| 4 | Actions 탭에서 `collect-and-publish` 를 한 번 수동 실행 → 사이트 주소 확인 (`https://<계정>.github.io/<저장소>/`) | GitHub |
+| 1 | ✅ GitHub 저장소 https://github.com/ravithole204-coder/ttorae-pick | 완료 |
+| 2 | ✅ 저장소 비밀값 `YOUTUBE_API_KEY` 등록 | 완료 |
+| 3 | ✅ GitHub Pages 켬 → https://ravithole204-coder.github.io/ttorae-pick/ | 완료 |
+| 4 | ✅ 3시간마다 자동 수집·배포 동작 확인 | 완료 |
 | 5 | 앱인토스 콘솔 가입 (토스 비즈니스 회원, 만 19세 이상, 본인 명의 토스앱) → 워크스페이스 만들기 → 제작자 이름 정하기 | https://developers-apps-in-toss.toss.im |
-| 6 | 앱 등록: 앱 이름 **또래픽**, 영문 이름 **Ttorae Pick**, appName **`ttorae-pick`**, 유형 **비게임** | 콘솔 |
+| 6 | 앱 등록: 앱 이름 **오늘의 화제**, 영문 이름 **Today Topic**, appName **`today-hwaje`**, 유형 **비게임** | 콘솔 |
 
 > appName 은 등록 뒤 바꿀 수 없어요. `apps-in-toss.config.ts` 의 `appName` 과 글자 하나까지 같아야 해요.
 
@@ -19,23 +19,23 @@
 
 ```bash
 # 토스용 빌드: 수집 결과는 GitHub Pages 에서 읽어요
-VITE_FEED_URL=https://<계정>.github.io/<저장소>/data/feed.json npm run build:toss
+VITE_FEED_URL=https://ravithole204-coder.github.io/ttorae-pick/data/feed.json npm run build:toss
 ```
 
-- 프로젝트 폴더에 `ttorae-pick.ait` 가 생겨요 → 콘솔 **앱 출시 → 등록하기** 에서 업로드.
+- 프로젝트 폴더에 `today-hwaje.ait` 가 생겨요 → 콘솔 **앱 출시 → 등록하기** 에서 업로드.
 - 업로드 후 콘솔의 **QR 코드**로 내 토스앱에서 실제 테스트 1회 이상 (심사 요청 조건).
 - 심사 3~7영업일 → 승인되면 **출시하기** 버튼.
 
 ## 3. 콘솔 앱 정보 (복사해서 쓰세요)
 
-- **부제**: 내 또래가 많이 쓰는 커뮤니티 인기글과 지금 많이 보는 영상
+- **부제**: 지금 많이 보는 영상과 연령대별 커뮤니티 인기글
 - **상세 설명**:
-  처음 들어오면 지금 한국에서 많이 보는 유튜브 영상(영상·쇼츠, 카테고리별)을 조회수 순으로 보여줘요. 커뮤니티 탭에서 연령대(10대~50대+)를 고르면 그 연령대가 주로 쓰는 커뮤니티들의 인기글 20개를 인기순·조회수순·최신순으로 볼 수 있어요. 각 글에는 최근 몇 시간 동안 조회수가 얼마나 늘었는지와 순위 변동이 표시돼요. 영상은 앱 안에서 바로 재생되고, 커뮤니티 글은 원문으로 이어져요. 연령대는 글이 아니라 커뮤니티 이용자층 기준이며, 그 근거를 화면에서 바로 볼 수 있어요. 40대 이상은 글자와 버튼이 자동으로 커져요.
+  처음 들어오면 지금 한국에서 많이 보는 유튜브 영상(영상·쇼츠, 카테고리별)을 조회수 순으로 보여줘요. 커뮤니티 탭에서 연령대(20대~50대+)를 고르면 그 연령대가 주로 쓰는 커뮤니티들의 인기글 20개를 인기순·조회수순·최신순으로 볼 수 있어요. 각 글에는 최근 몇 시간 동안 조회수가 얼마나 늘었는지와 순위 변동이 표시돼요. 영상은 앱 안에서 바로 재생되고, 커뮤니티 글은 원문으로 이어져요. 연령대는 글이 아니라 커뮤니티 이용자층 기준이며, 그 근거를 화면에서 바로 볼 수 있어요. 40대 이상은 글자와 버튼이 자동으로 커져요.
 - **카테고리**: 비게임 → 콘텐츠/미디어 계열 (콘솔에서 가장 가까운 항목 선택)
 - **고객문의 이메일**: (본인 이메일)
 - **앱 로고**: `toss-assets/logo-600.png` (600×600, 불투명 배경)
 - **스크린샷(선택)**: `toss-assets/screenshot-1-youtube.png`, `screenshot-2-community.png`, `screenshot-3-community-50.png` (636×1048)
-- **주요 기능(선택)**: 한글 "또래 인기글" / 영문 "Peer Picks" / URL `intoss://ttorae-pick`
+- **주요 기능(선택)**: 한글 "오늘의 인기글" / 영문 "Hot Today" / URL `intoss://today-hwaje`
 
 ## 4. 심사 기준에 맞춰 이미 반영한 것
 

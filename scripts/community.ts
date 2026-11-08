@@ -53,14 +53,14 @@ export const SITES: readonly SiteConfig[] = [
   {
     site: 'instiz',
     label: '인스티즈',
-    ages: ['10대', '20대'],
+    ages: ['20대'],
     gender: 'all',
     basis: '아이돌·학교 이야기 중심 커뮤니티로 10대 후반~20대 이용자가 주류예요. 공개 통계는 없어서 사이트 성격 기준이에요.',
   },
   {
     site: 'orbi',
     label: '오르비',
-    ages: ['10대', '20대'],
+    ages: ['20대'],
     gender: 'all',
     basis: '수능 수험생 커뮤니티라 고등학생·재수생(10대 후반~20대 초반)이 이용해요. 사이트 성격 기준이에요.',
   },
@@ -104,7 +104,7 @@ export const SITES: readonly SiteConfig[] = [
 ];
 
 /** 누가 왜 긁어가는지 상대 사이트가 알 수 있게 솔직하게 밝혀요. 브라우저인 척하지 않아요. */
-const USER_AGENT = 'TtoraePick/0.1 (+https://github.com/haruzong1; community popular-posts aggregator; title+link only)';
+const USER_AGENT = 'OneulHwaje/0.1 (+https://github.com/ravithole204-coder/ttorae-pick; community popular-posts aggregator; title+link only)';
 const TIMEOUT_MS = 15_000;
 const GAP_MS = 1_500;
 const PER_SITE_LIMIT = 30;

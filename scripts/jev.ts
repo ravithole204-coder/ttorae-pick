@@ -34,7 +34,6 @@ const STATE =
   'A Korean YouTube video from the Korea (KR) trending chart. Estimate which Korean age group and gender watches it most, judging from the title, channel name, category, tags and description. Korean cultural context: 수능/급식/학교/아이돌 → teens; 자취/취업/면접/대학/연애 → 20s; 육아/내집마련/이직/결혼 → 30s; 자녀 입시/노후 준비/건강 → 40s; 트로트/은퇴/손주/건강 정보 → 50s and older.';
 
 const AGE_CRITERIA: Record<AgeGroup, string> = {
-  '10대': 'Teenagers (13-19): students, school life, exams, idols, games, memes, short comedy',
   '20대': 'Twenties: university, first job, dating, living alone, fashion, K-pop, travel, sports highlights',
   '30대': 'Thirties: career, marriage, parenting young kids, housing, finance, fitness, cooking',
   '40대': 'Forties: raising teens, education, health, mid-career, cars, golf, news and politics',
