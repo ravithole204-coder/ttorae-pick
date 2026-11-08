@@ -104,7 +104,7 @@ export const SITES: readonly SiteConfig[] = [
 ];
 
 /** 누가 왜 긁어가는지 상대 사이트가 알 수 있게 솔직하게 밝혀요. 브라우저인 척하지 않아요. */
-const USER_AGENT = 'TodayIssue/0.1 (+https://github.com/ravithole204-coder/ttorae-pick; community popular-posts aggregator; title+link only)';
+const USER_AGENT = 'MaeilMaeil/0.1 (+https://github.com/ravithole204-coder/ttorae-pick; community popular-posts aggregator; title+link only)';
 const TIMEOUT_MS = 15_000;
 const GAP_MS = 1_500;
 const PER_SITE_LIMIT = 30;

@@ -11,7 +11,7 @@ export function Onboarding({ onDone }: Props) {
 
   return (
     <main className="onboard">
-      <p className="onboard-eyebrow">오늘의 이슈</p>
+      <p className="onboard-eyebrow">매일 매일</p>
       <h1>
         내 또래는 요즘
         <br />
