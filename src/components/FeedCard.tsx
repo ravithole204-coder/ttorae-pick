@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { FeedItem, RankDelta } from '../types';
 import { formatAgo, formatCount, formatDelta, isShorts, thumbColor } from '../format';
+import { ExternalLink } from './ExternalLink';
 
 interface Props {
   item: FeedItem;
@@ -39,7 +40,7 @@ export function FeedCard({ item, rank, intervalHours, onOpen }: Props) {
   ].filter((part): part is string => part !== null);
 
   // 커뮤니티 글은 중간 화면 없이 바로 원문으로 가요 (새 탭). 유튜브는 앱 안 플레이어로
-  const direct = item.kind === 'community' && item.url;
+  const directUrl = item.kind === 'community' ? item.url : undefined;
 
   const inner = (
     <>
@@ -85,10 +86,10 @@ export function FeedCard({ item, rank, intervalHours, onOpen }: Props) {
 
   return (
     <li>
-      {direct ? (
-        <a className="card" href={item.url} target="_blank" rel="noopener noreferrer">
+      {directUrl ? (
+        <ExternalLink className="card" href={directUrl}>
           {inner}
-        </a>
+        </ExternalLink>
       ) : (
         <button type="button" className="card" onClick={() => onOpen(item)}>
           {inner}

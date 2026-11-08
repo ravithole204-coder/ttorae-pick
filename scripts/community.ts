@@ -35,20 +35,72 @@ export interface CommunityPost {
 export interface SiteConfig {
   site: string;
   label: string;
-  /** 이 사이트를 주로 쓰는 연령대 (이용자 통계 기반 추정) */
+  /** 이 사이트를 주로 쓰는 연령대 */
   ages: AgeGroup[];
   gender: Gender;
+  /** 왜 이 연령대로 묶었는지 — 화면에 그대로 보여주는 문장. 공개 통계가 있으면 숫자를, 없으면 "사이트 성격 기준"이라고 솔직히 써요 */
+  basis: string;
+  /** 근거 출처 (공개 통계가 있을 때만) */
+  basisUrl?: string;
 }
 
-/** 사이트 → 주 이용 연령대·성별. 루리웹·에펨코리아는 아직 안 넣었어요. */
+/**
+ * 사이트 → 주 이용 연령대·성별.
+ * 글을 누가 봤는지는 알 수 없어요. 대신 "그 커뮤니티를 주로 쓰는 사람"을 기준으로 묶고, 근거를 화면에 밝혀요.
+ * 루리웹·에펨코리아는 아직 안 넣었어요.
+ */
 export const SITES: readonly SiteConfig[] = [
-  { site: 'instiz', label: '인스티즈', ages: ['10대', '20대'], gender: 'all' },
-  { site: 'orbi', label: '오르비', ages: ['10대', '20대'], gender: 'all' },
-  { site: 'theqoo', label: '더쿠', ages: ['20대', '30대'], gender: 'female' },
-  { site: 'dcbest', label: '디시 실베', ages: ['20대', '30대'], gender: 'male' },
-  { site: 'bobaedream', label: '보배드림', ages: ['30대', '40대', '50대+'], gender: 'male' },
-  { site: 'todayhumor', label: '오늘의유머', ages: ['30대', '40대'], gender: 'all' },
-  { site: '82cook', label: '82cook', ages: ['40대', '50대+'], gender: 'female' },
+  {
+    site: 'instiz',
+    label: '인스티즈',
+    ages: ['10대', '20대'],
+    gender: 'all',
+    basis: '아이돌·학교 이야기 중심 커뮤니티로 10대 후반~20대 이용자가 주류예요. 공개 통계는 없어서 사이트 성격 기준이에요.',
+  },
+  {
+    site: 'orbi',
+    label: '오르비',
+    ages: ['10대', '20대'],
+    gender: 'all',
+    basis: '수능 수험생 커뮤니티라 고등학생·재수생(10대 후반~20대 초반)이 이용해요. 사이트 성격 기준이에요.',
+  },
+  {
+    site: 'theqoo',
+    label: '더쿠',
+    ages: ['20대', '30대'],
+    gender: 'female',
+    basis: '2024년 랭키파이 집계에서 20대 41%·30대 32%, 카카오데이터트렌드 기준 여성 비율 94%예요.',
+    basisUrl: 'https://news.nate.com/view/20240409n19293',
+  },
+  {
+    site: 'dcbest',
+    label: '디시 실베',
+    ages: ['20대', '30대'],
+    gender: 'male',
+    basis: '2023년 모바일인덱스·시밀러웹 기준 이용자의 약 80%가 10~30대, 남성 79%예요.',
+    basisUrl: 'https://news.nate.com/view/20230821n20366',
+  },
+  {
+    site: 'bobaedream',
+    label: '보배드림',
+    ages: ['40대', '50대+'],
+    gender: 'male',
+    basis: '자동차 커뮤니티로 남성 회원이 대다수이고 50~60대 비중이 높다고 알려져 있어요. 공개 통계는 없어서 사이트 성격 기준이에요.',
+  },
+  {
+    site: 'todayhumor',
+    label: '오늘의유머',
+    ages: ['30대', '40대'],
+    gender: 'all',
+    basis: '2000년대 초 개설된 유머 커뮤니티로 30~40대 이용자가 많다고 알려져 있어요. 공개 통계는 없어서 사이트 성격 기준이에요.',
+  },
+  {
+    site: '82cook',
+    label: '82cook',
+    ages: ['40대', '50대+'],
+    gender: 'female',
+    basis: '요리·살림 커뮤니티로 30~50대 기혼 여성이 주류이고, 2014년 이후 신규 가입을 받지 않아 연령대가 높아졌어요. 사이트 성격 기준이에요.',
+  },
 ];
 
 /** 누가 왜 긁어가는지 상대 사이트가 알 수 있게 솔직하게 밝혀요. 브라우저인 척하지 않아요. */

@@ -1,18 +1,18 @@
 /**
  * 수집 프로그램. 실행하면:
- *   1. 유튜브 한국 인기 영상을 가져오고
+ *   1. 유튜브 한국 인기 영상을 가져오고 (연령 구분 없이 전체 순위 — 영상별 시청자 나이는 공개되지 않아요)
  *   2. 이전 수집과 비교해 "최근 몇 시간 동안 얼마나 늘었는지"를 계산하고
- *   3. 새 영상은 AI로 연령대를 분류한 뒤
- *   4. 연령대별 순위를 public/data/feed.json 에 저장해요.
+ *   3. 커뮤니티 인기글을 "그 커뮤니티를 주로 쓰는 연령대"로 묶은 뒤
+ *   4. public/data/feed.json 에 저장해요.
  *
  * 실행: npm run collect
  */
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { z } from 'zod';
-import { AGE_GROUPS, type AgeGroup, type FeedFile, type FeedItem, type RankDelta } from '../src/types';
+import { AGE_GROUPS, type FeedFile, type FeedItem, type RankDelta } from '../src/types';
 import { videoFormat, type VideoFormat } from '../src/format';
 import { ClassificationSchema, classifyVideos, type ClassificationMap } from './classify';
-import { SITES, fetchCommunityPosts, type CommunityPost } from './community';
+import { SITES, fetchCommunityPosts, type CommunityPost, type SiteConfig } from './community';
 import { fetchPostThumbnails, type ThumbnailCache } from './thumbnails';
 import { bestThumbnail, categoryName, fetchPopularVideos, formatDuration, type YoutubeVideo } from './youtube';
 
@@ -173,19 +173,19 @@ function rankCommunity(posts: CommunityPost[], prevRanks: Map<string, number>, p
   const shown = new Map<string, CommunityPost>();
   for (const age of AGE_GROUPS) {
     const sites = SITES.filter((s) => s.ages.includes(age) && (bySite.get(s.site)?.length ?? 0) > 0);
-    const picked: { post: CommunityPost; gender: FeedItem['gender'] }[] = [];
+    const picked: { post: CommunityPost; site: SiteConfig }[] = [];
     for (let round = 0; picked.length < PER_AGE; round++) {
       let added = false;
       for (const s of sites) {
         const post = bySite.get(s.site)?.[round];
         if (!post || picked.length >= PER_AGE) continue;
-        picked.push({ post, gender: s.gender });
+        picked.push({ post, site: s });
         added = true;
       }
       if (!added) break;
     }
 
-    picked.forEach(({ post, gender }, i) => {
+    picked.forEach(({ post, site }, i) => {
       const id = `${age}-community-${post.id}`;
       shown.set(post.id, post);
       items.push({
@@ -194,7 +194,9 @@ function rankCommunity(posts: CommunityPost[], prevRanks: Map<string, number>, p
         kind: 'community',
         title: post.title,
         source: post.siteLabel,
-        gender,
+        gender: site.gender,
+        basis: site.basis,
+        basisUrl: site.basisUrl,
         views: post.views ?? 0,
         comments: post.comments ?? 0,
         recommends: post.recommends,
@@ -229,7 +231,6 @@ async function fillThumbnails(ranked: RankedCommunity, cache: ThumbnailCache): P
 
 async function main(): Promise<void> {
   const youtubeKey = requireEnv('YOUTUBE_API_KEY');
-  requireEnv('TYPESAFE_API_KEY');
 
   console.log('유튜브 인기 영상 가져오는 중…');
   const fetched = await fetchPopularVideos(youtubeKey, 50);
@@ -242,7 +243,7 @@ async function main(): Promise<void> {
   const intervalHours = previous ? hoursBetween(previous.takenAt, now) : null;
   if (previous) console.log(`${intervalHours?.toFixed(1)}시간 전 기록과 비교해요`);
 
-  console.log('연령대 분류 중…');
+  console.log('영상 한 줄 소개 만드는 중…');
   const cached = await readJson<ClassificationMap>(CLASSIFICATION_PATH, z.record(z.string(), ClassificationSchema), {});
   const classifications = await classifyVideos(videos, cached);
 
@@ -259,46 +260,41 @@ async function main(): Promise<void> {
     return before === undefined ? undefined : views(v) - before;
   };
 
-  const items: FeedItem[] = [];
-  for (const age of AGE_GROUPS) {
-    const forAge = videos.filter((v) => classifications[v.id]?.ages.includes(age));
-    // 조회수 많은 순. (증가량은 화면에 "+12만"으로만 보여줘요)
-    forAge.sort((a, b) => views(b) - views(a));
+  // 유튜브는 연령 구분 없이 하나의 순위예요. 조회수 많은 순. (증가량은 화면에 "+12만"으로만 보여줘요)
+  const sorted = [...videos].sort((a, b) => views(b) - views(a));
 
-    // 쇼츠 / 클립 / 영상을 따로 뽑아요 — 차트가 짧은 영상으로 가득 차서 섞으면 긴 영상이 묻혀요
-    const formatOf = (v: YoutubeVideo) => videoFormat(formatDuration(v.contentDetails.duration));
-    const groups: Record<VideoFormat, YoutubeVideo[]> = { shorts: [], video: [] };
-    for (const v of forAge) groups[formatOf(v)].push(v);
-    const chosen = (Object.keys(groups) as VideoFormat[]).flatMap((f) => groups[f].slice(0, PER_FORMAT[f]));
-    const rankIn = (v: YoutubeVideo) => groups[formatOf(v)].indexOf(v) + 1;
+  // 쇼츠 / 영상을 따로 뽑아요 — 차트가 짧은 영상으로 가득 차서 섞으면 긴 영상이 묻혀요
+  const formatOf = (v: YoutubeVideo) => videoFormat(formatDuration(v.contentDetails.duration));
+  const groups: Record<VideoFormat, YoutubeVideo[]> = { shorts: [], video: [] };
+  for (const v of sorted) groups[formatOf(v)].push(v);
+  const chosen = (Object.keys(groups) as VideoFormat[]).flatMap((f) => groups[f].slice(0, PER_FORMAT[f]));
+  const rankIn = (v: YoutubeVideo) => groups[formatOf(v)].indexOf(v) + 1;
 
-    chosen.forEach((v) => {
-      const rank = rankIn(v);
-      const c = classifications[v.id];
-      const id = `${age}-youtube-${v.id}`;
-      items.push({
-        id,
-        age: age as AgeGroup,
-        kind: 'youtube',
-        title: v.snippet.title,
-        source: v.snippet.channelTitle,
-        gender: c.gender,
-        views: views(v),
-        comments: Number(v.statistics.commentCount ?? 0),
-        hoursAgo: Math.round(hoursBetween(v.snippet.publishedAt, now)),
-        emoji: c.emoji,
-        summary: c.summary,
-        rankDelta: rankDelta(prevRanks, id, rank),
-        duration: formatDuration(v.contentDetails.duration),
-        url: `https://www.youtube.com/watch?v=${v.id}`,
-        thumbnail: bestThumbnail(v),
-        viewsDelta: growth(v),
-        videoId: v.id,
-        category: categoryName(v.snippet.categoryId),
-        likes: Number(v.statistics.likeCount ?? 0),
-      });
-    });
-  }
+  const items: FeedItem[] = chosen.map((v) => {
+    const c = classifications[v.id];
+    const id = `all-youtube-${v.id}`;
+    return {
+      id,
+      age: 'all',
+      kind: 'youtube',
+      title: v.snippet.title,
+      source: v.snippet.channelTitle,
+      gender: 'all',
+      views: views(v),
+      comments: Number(v.statistics.commentCount ?? 0),
+      hoursAgo: Math.round(hoursBetween(v.snippet.publishedAt, now)),
+      emoji: c?.emoji ?? '🎞️',
+      summary: c?.summary ?? '',
+      rankDelta: rankDelta(prevRanks, id, rankIn(v)),
+      duration: formatDuration(v.contentDetails.duration),
+      url: `https://www.youtube.com/watch?v=${v.id}`,
+      thumbnail: bestThumbnail(v),
+      viewsDelta: growth(v),
+      videoId: v.id,
+      category: categoryName(v.snippet.categoryId),
+      likes: Number(v.statistics.likeCount ?? 0),
+    };
+  });
 
   console.log('커뮤니티 인기글 가져오는 중…');
   let communityItems: FeedItem[];
@@ -333,12 +329,9 @@ async function main(): Promise<void> {
   await writeFile(CLASSIFICATION_PATH, JSON.stringify(classifications, null, 2));
   await writeFile(FEED_PATH, JSON.stringify(feed, null, 2));
 
-  const count = (age: AgeGroup, f: VideoFormat) => items.filter((it) => it.age === age && videoFormat(it.duration) === f).length;
-  const perAge = AGE_GROUPS.map(
-    (age) =>
-      `${age} 영상 ${count(age, 'video')}·쇼츠 ${count(age, 'shorts')}·커뮤니티 ${communityItems.filter((it) => it.age === age).length}`,
-  ).join(', ');
-  console.log(`저장 완료 → ${FEED_PATH} (${perAge})`);
+  const count = (f: VideoFormat) => items.filter((it) => videoFormat(it.duration) === f).length;
+  const perAge = AGE_GROUPS.map((age) => `${age} ${communityItems.filter((it) => it.age === age).length}`).join(', ');
+  console.log(`저장 완료 → ${FEED_PATH} (유튜브 영상 ${count('video')}·쇼츠 ${count('shorts')} / 커뮤니티 ${perAge})`);
 }
 
 main().catch((err: unknown) => {

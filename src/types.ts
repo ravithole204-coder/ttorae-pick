@@ -12,13 +12,21 @@ export type RankDelta = number | 'new';
 
 export interface FeedItem {
   id: string;
-  age: AgeGroup;
+  /**
+   * 커뮤니티 글: 그 커뮤니티를 주로 쓰는 연령대 (이용자 통계·사이트 성격 기준).
+   * 유튜브: 'all' — 영상별 시청자 나이는 공개되지 않아서 연령 구분 없이 전체 인기 순위예요.
+   */
+  age: AgeGroup | 'all';
   kind: FeedKind;
   title: string;
   /** 유튜브는 채널명, 커뮤니티는 사이트명 */
   source: string;
-  /** 주로 반응한 성별 (커뮤니티 이용자 성비 기준 추정) */
+  /** 커뮤니티 이용자 성비 기준. 유튜브는 'all' */
   gender: Gender;
+  /** 커뮤니티를 이 연령대로 묶은 근거 (화면에 그대로 보여줘요) */
+  basis?: string;
+  /** 근거 출처 링크 */
+  basisUrl?: string;
   views: number;
   comments: number;
   /** 추천/좋아요 수 (커뮤니티 글) */

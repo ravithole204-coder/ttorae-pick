@@ -123,10 +123,11 @@ button {
   background: var(--surface);
 }
 
+/* 연령대 탭은 커뮤니티 탭 아래에만 있어요 (유튜브는 연령 구분이 없어요) */
 .age-tabs {
   display: flex;
   gap: 4px;
-  margin: 0 20px 8px;
+  margin: 10px 20px 0;
   padding: 4px;
   border-radius: 14px;
   background: var(--card);
@@ -408,6 +409,57 @@ button {
   line-height: 1.6;
   color: var(--muted);
   word-break: keep-all;
+}
+
+/* 커뮤니티를 이 연령대로 묶은 근거 (접었다 펼 수 있어요) */
+.basis {
+  margin: 10px 20px 0;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: var(--card);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+  word-break: keep-all;
+}
+
+.basis summary {
+  padding: 14px 0;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.basis summary::-webkit-details-marker {
+  display: none;
+}
+
+.basis summary::before {
+  content: '▸ ';
+}
+
+.basis[open] summary::before {
+  content: '▾ ';
+}
+
+.basis ul {
+  margin: 0;
+  padding: 0 0 14px;
+  list-style: none;
+}
+
+.basis li + li {
+  margin-top: 8px;
+}
+
+.basis b {
+  color: var(--text);
+}
+
+.basis a {
+  color: var(--primary);
+  text-decoration: underline;
 }
 
 /* ---------- 버튼 ---------- */

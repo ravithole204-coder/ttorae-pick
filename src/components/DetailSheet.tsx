@@ -2,29 +2,31 @@ import { useState } from 'react';
 import { ageLabel, type FeedItem } from '../types';
 import { formatAgo, formatCount, formatDelta } from '../format';
 import { BottomSheet } from './BottomSheet';
+import { openExternal } from '../toss';
 
 interface Props {
   item: FeedItem;
   onClose: () => void;
 }
 
-/** 왜 이 연령대 인기글로 뽑혔는지 설명 (실제 서비스에서는 수집 근거를 그대로 보여줄 예정) */
+/** 왜 인기글로 뽑혔는지 — 나이대는 "누가 봤는지"가 아니라 "어느 커뮤니티인지" 기준이라는 걸 그대로 써요 */
 function reasonText(item: FeedItem): string {
-  const age = ageLabel(item.age);
   if (item.kind === 'youtube') {
     const growth =
       item.viewsDelta !== undefined && item.viewsDelta > 0
-        ? `최근 수집 간격 동안 조회수가 ${formatDelta(item.viewsDelta)} 늘었어요.`
-        : '최근 조회수가 빠르게 늘고 있어요.';
-    return `영상 내용과 채널 성격으로 볼 때 ${age} 시청자가 많이 볼 영상이에요. ${growth}`;
+        ? `최근 수집 간격 동안 전체 조회수가 ${formatDelta(item.viewsDelta)} 늘었어요.`
+        : '유튜브 한국 인기 차트에 올라 있어요.';
+    return `연령 구분 없는 전체 인기 순위예요. ${growth}`;
   }
+  const age = item.age === 'all' ? '' : `${ageLabel(item.age)}가 많이 쓰는 `;
   const delta =
     item.viewsDelta !== undefined && item.viewsDelta > 0
       ? ` 최근 수집 간격 동안 조회수가 ${formatDelta(item.viewsDelta)} 늘었어요.`
       : item.recommendsDelta !== undefined && item.recommendsDelta > 0
         ? ` 최근 수집 간격 동안 추천이 ${formatDelta(item.recommendsDelta)} 늘었어요.`
         : '';
-  return `${age} 이용자가 많은 ${item.source}에서 추천·댓글 반응이 높은 글이에요.${delta}`;
+  const basis = item.basis ? ` ${item.basis}` : '';
+  return `${age}${item.source}의 인기글이에요.${delta}${basis}`;
 }
 
 export function DetailSheet({ item, onClose }: Props) {
@@ -32,7 +34,7 @@ export function DetailSheet({ item, onClose }: Props) {
   const isYoutube = item.kind === 'youtube';
 
   const open = () => {
-    if (item.url) window.open(item.url, '_blank', 'noopener');
+    if (item.url) void openExternal(item.url);
     else setNotice(true);
   };
 
@@ -66,7 +68,7 @@ export function DetailSheet({ item, onClose }: Props) {
       )}
 
       <section className="box reason">
-        <h3>왜 {ageLabel(item.age)} 인기글인가요?</h3>
+        <h3>{item.age === 'all' ? '왜 인기글인가요?' : `왜 ${ageLabel(item.age)} 인기글인가요?`}</h3>
         <p>{reasonText(item)}</p>
       </section>
 

@@ -1,20 +1,16 @@
 /**
- * 영상 분류 = Jev(연령대·성별 판단) + Claude(한 줄 요약·이모지).
- * 한 번 분류한 영상은 data/classifications.json 에 저장해서 다시 돈 들이지 않아요.
+ * 영상 소개 = Claude 한 줄 요약·이모지 (선택).
+ * 연령대 분류는 하지 않아요 — 영상별 시청자 나이는 유튜브가 공개하지 않아서, 추정으로 나누면 근거가 없기 때문이에요.
+ * 한 번 요약한 영상은 data/classifications.json 에 저장해서 다시 돈 들이지 않아요.
  * Claude 키가 없으면 유튜브 설명 첫 줄과 카테고리 이모지로 대신해요.
  */
 import Anthropic from '@anthropic-ai/sdk';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
 import { z } from 'zod';
-import { AGE_GROUPS } from '../src/types';
-import { guessAudience, type AudienceGuess } from './jev';
 import { categoryName, type YoutubeVideo } from './youtube';
 
 export const ClassificationSchema = z.object({
   id: z.string(),
-  ages: z.array(z.enum(AGE_GROUPS)),
-  ageProbabilities: z.record(z.enum(AGE_GROUPS), z.number()).optional(),
-  gender: z.enum(['all', 'male', 'female']),
   summary: z.string(),
   emoji: z.string(),
 });
@@ -96,22 +92,11 @@ function fallbackSummary(v: YoutubeVideo): { summary: string; emoji: string } {
 // ---------- 합치기 ----------
 
 /**
- * 아직 분류되지 않은 영상만 골라 Jev(연령대)와 Claude(요약)에 묻고, 결과를 기존 지도에 합쳐 돌려줘요.
+ * 아직 요약되지 않은 영상만 골라 Claude(있을 때)에 묻고, 결과를 기존 지도에 합쳐 돌려줘요.
  */
 export async function classifyVideos(videos: YoutubeVideo[], cached: ClassificationMap): Promise<ClassificationMap> {
   const pending = videos.filter((v) => !cached[v.id]);
   if (pending.length === 0) return cached;
-
-  const audience: Map<string, AudienceGuess> = await guessAudience(
-    pending.map((v) => ({
-      id: v.id,
-      title: v.snippet.title,
-      channel: v.snippet.channelTitle,
-      category: categoryName(v.snippet.categoryId),
-      description: v.snippet.description,
-      tags: v.snippet.tags,
-    })),
-  );
 
   const hasClaude = Boolean(process.env.ANTHROPIC_API_KEY);
   if (!hasClaude) console.log('ANTHROPIC_API_KEY 가 없어서 요약은 유튜브 설명 첫 줄로 대신해요.');
@@ -119,17 +104,8 @@ export async function classifyVideos(videos: YoutubeVideo[], cached: Classificat
 
   const result: ClassificationMap = { ...cached };
   for (const v of pending) {
-    const a = audience.get(v.id);
-    if (!a) continue;
     const s = summaries.get(v.id) ?? fallbackSummary(v);
-    result[v.id] = {
-      id: v.id,
-      ages: a.ages,
-      ageProbabilities: a.ageProbabilities,
-      gender: a.gender,
-      summary: s.summary,
-      emoji: s.emoji,
-    };
+    result[v.id] = { id: v.id, summary: s.summary, emoji: s.emoji };
   }
   return result;
 }

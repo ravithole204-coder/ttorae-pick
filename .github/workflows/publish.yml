@@ -1,0 +1,64 @@
+# 3시간마다 인기글을 다시 모아서 GitHub Pages 에 올려요.
+# - 사이트 주소: https://<계정>.github.io/<저장소>/
+# - 토스 미니앱은 이 주소의 data/feed.json 을 읽어요 (빌드할 때 VITE_FEED_URL 로 지정)
+# 필요한 설정: 저장소 Settings > Secrets > Actions 에 YOUTUBE_API_KEY (선택: ANTHROPIC_API_KEY),
+#             Settings > Pages > Source 를 "GitHub Actions" 로.
+name: collect-and-publish
+
+on:
+  schedule:
+    - cron: '0 */3 * * *' # 3시간마다 (UTC 기준 정각)
+  push:
+    branches: [main]
+  workflow_dispatch: # 수동 실행 버튼
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 동시에 두 번 돌지 않게 (수집 기록 파일이 꼬이지 않도록)
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # 이전 실행의 수집 기록(조회수 스냅샷, 요약 캐시, 썸네일 캐시)을 이어받아요.
+      # 키를 매번 새로 만들고(restore-keys 로 최신 것을 복원) 실행이 끝나면 새 키로 저장돼요.
+      - uses: actions/cache@v4
+        with:
+          path: data
+          key: collect-data-${{ github.run_id }}
+          restore-keys: |
+            collect-data-
+
+      - name: 인기글 수집
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npm run collect
+
+      - name: 사이트 빌드
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deploy
+        uses: actions/deploy-pages@v4

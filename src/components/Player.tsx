@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import type { FeedItem } from '../types';
 import { formatCount } from '../format';
+import { ExternalLink } from './ExternalLink';
 
 interface Props {
   item: FeedItem;
@@ -54,9 +55,9 @@ export function Player({ item, onClose }: Props) {
           {item.likes !== undefined && item.likes > 0 && <span className="stat">👍 좋아요 {formatCount(item.likes)}</span>}
           {item.comments > 0 && <span className="stat">💬 댓글 {formatCount(item.comments)}</span>}
           {item.url && (
-            <a className="stat link" href={item.url} target="_blank" rel="noopener noreferrer">
+            <ExternalLink className="stat link" href={item.url}>
               ▶ YouTube에서 보기
-            </a>
+            </ExternalLink>
           )}
         </div>
         {item.summary && <p className="player-summary">{item.summary}</p>}
