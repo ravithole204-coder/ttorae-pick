@@ -1,4 +1,5 @@
-export const AGE_GROUPS = ['10대', '20대', '30대', '40대', '50대+'] as const;
+/** 10대는 뺐어요 — 10대가 주로 쓰는 커뮤니티들이 수집 서버 접속을 막아서 목록을 채울 수 없어요 */
+export const AGE_GROUPS = ['20대', '30대', '40대', '50대+'] as const;
 export type AgeGroup = (typeof AGE_GROUPS)[number];
 
 export type FeedKind = 'youtube' | 'community';

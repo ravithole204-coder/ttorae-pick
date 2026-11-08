@@ -76,7 +76,6 @@ const SORTS: { key: CommunitySort; label: string }[] = [
 
 /** 연령대가 올라갈수록 글자·버튼을 키워요 (노안 대비). 40대부터 눈에 띄게 커져요 */
 const AGE_SCALE: Record<AgeGroup, number> = {
-  '10대': 1,
   '20대': 1,
   '30대': 1.04,
   '40대': 1.12,
@@ -251,7 +250,7 @@ export function App() {
   return (
     <div className="app" style={{ zoom: AGE_SCALE[age] }}>
       <header className="top">
-        <span className="brand">또래픽</span>
+        <span className="brand">오늘의 화제</span>
         {!IN_TOSS && (
           <button
             type="button"
