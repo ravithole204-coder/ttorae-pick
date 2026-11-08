@@ -6,10 +6,10 @@
 
 | 순서 | 할 일 | 어디서 |
 |---|---|---|
-| 1 | GitHub 저장소에 코드 올리기 (Claude가 도와줌) | 터미널 |
-| 2 | 저장소 **Settings → Secrets and variables → Actions** 에 `YOUTUBE_API_KEY` 추가 (선택: `ANTHROPIC_API_KEY`) | GitHub |
-| 3 | 저장소 **Settings → Pages → Source** 를 **GitHub Actions** 로 | GitHub |
-| 4 | Actions 탭에서 `collect-and-publish` 를 한 번 수동 실행 → 사이트 주소 확인 (`https://<계정>.github.io/<저장소>/`) | GitHub |
+| 1 | ✅ GitHub 저장소 https://github.com/ravithole204-coder/ttorae-pick | 완료 |
+| 2 | ✅ 저장소 비밀값 `YOUTUBE_API_KEY` 등록 | 완료 |
+| 3 | ✅ GitHub Pages 켬 → https://ravithole204-coder.github.io/ttorae-pick/ | 완료 |
+| 4 | ✅ 3시간마다 자동 수집·배포 동작 확인 | 완료 |
 | 5 | 앱인토스 콘솔 가입 (토스 비즈니스 회원, 만 19세 이상, 본인 명의 토스앱) → 워크스페이스 만들기 → 제작자 이름 정하기 | https://developers-apps-in-toss.toss.im |
 | 6 | 앱 등록: 앱 이름 **또래픽**, 영문 이름 **Ttorae Pick**, appName **`ttorae-pick`**, 유형 **비게임** | 콘솔 |
 
@@ -19,7 +19,7 @@
 
 ```bash
 # 토스용 빌드: 수집 결과는 GitHub Pages 에서 읽어요
-VITE_FEED_URL=https://<계정>.github.io/<저장소>/data/feed.json npm run build:toss
+VITE_FEED_URL=https://ravithole204-coder.github.io/ttorae-pick/data/feed.json npm run build:toss
 ```
 
 - 프로젝트 폴더에 `ttorae-pick.ait` 가 생겨요 → 콘솔 **앱 출시 → 등록하기** 에서 업로드.
