@@ -238,6 +238,9 @@ button {
   background: var(--card);
   text-align: left;
   transition: background 0.15s;
+  /* 커뮤니티 카드는 <a> 라서 링크 기본 꾸밈(밑줄·파란색)을 지워요 */
+  color: inherit;
+  text-decoration: none;
 }
 
 .card:active {

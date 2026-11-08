@@ -38,10 +38,12 @@ export function FeedCard({ item, rank, intervalHours, onOpen }: Props) {
     formatAgo(item.hoursAgo) || null,
   ].filter((part): part is string => part !== null);
 
-  return (
-    <li>
-      <button type="button" className="card" onClick={() => onOpen(item)}>
-        <div className="rank">{rank}</div>
+  // 커뮤니티 글은 중간 화면 없이 바로 원문으로 가요 (새 탭). 유튜브는 앱 안 플레이어로
+  const direct = item.kind === 'community' && item.url;
+
+  const inner = (
+    <>
+      <div className="rank">{rank}</div>
 
         <div className={`thumb ${item.kind}`} style={{ background: thumbColor(item.id) }} aria-hidden="true">
           {item.thumbnail && !failed ? (
@@ -78,7 +80,20 @@ export function FeedCard({ item, rank, intervalHours, onOpen }: Props) {
             <RankBadge value={item.rankDelta} />
           </div>
         </div>
-      </button>
+    </>
+  );
+
+  return (
+    <li>
+      {direct ? (
+        <a className="card" href={item.url} target="_blank" rel="noopener noreferrer">
+          {inner}
+        </a>
+      ) : (
+        <button type="button" className="card" onClick={() => onOpen(item)}>
+          {inner}
+        </button>
+      )}
     </li>
   );
 }
