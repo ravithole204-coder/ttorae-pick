@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+.claude/
+.omc/
+.DS_Store
+# 수집 프로그램이 만드는 작업 파일 (조회수 기록, AI 분류 캐시)
+data/
