@@ -1,4 +1,4 @@
-# 오늘의 화제 — 토스 미니앱(앱인토스) 제출 체크리스트
+# 오늘의 이슈 — 토스 미니앱(앱인토스) 제출 체크리스트
 
 마지막 정리: 2026-11-08
 
@@ -11,7 +11,7 @@
 | 3 | ✅ GitHub Pages 켬 → https://ravithole204-coder.github.io/ttorae-pick/ | 완료 |
 | 4 | ✅ 3시간마다 자동 수집·배포 동작 확인 | 완료 |
 | 5 | 앱인토스 콘솔 가입 (토스 비즈니스 회원, 만 19세 이상, 본인 명의 토스앱) → 워크스페이스 만들기 → 제작자 이름 정하기 | https://developers-apps-in-toss.toss.im |
-| 6 | 앱 등록: 앱 이름 **오늘의 화제**, 영문 이름 **Today Topic**, appName **`today-hwaje`**, 유형 **비게임** | 콘솔 |
+| 6 | ✅ 앱 등록: appName **`today-issue`**, 유형 **비게임** (등록 완료). 앱 이름은 앱 정보에서 한글 **오늘의 이슈** 로 맞추기 | 콘솔 |
 
 > appName 은 등록 뒤 바꿀 수 없어요. `apps-in-toss.config.ts` 의 `appName` 과 글자 하나까지 같아야 해요.
 
@@ -22,7 +22,7 @@
 VITE_FEED_URL=https://ravithole204-coder.github.io/ttorae-pick/data/feed.json npm run build:toss
 ```
 
-- 프로젝트 폴더에 `today-hwaje.ait` 가 생겨요 → 콘솔 **앱 출시 → 등록하기** 에서 업로드.
+- 프로젝트 폴더에 `today-issue.ait` 가 생겨요 → 콘솔 **앱 출시 → 등록하기** 에서 업로드.
 - 업로드 후 콘솔의 **QR 코드**로 내 토스앱에서 실제 테스트 1회 이상 (심사 요청 조건).
 - 심사 3~7영업일 → 승인되면 **출시하기** 버튼.
 
@@ -35,7 +35,7 @@ VITE_FEED_URL=https://ravithole204-coder.github.io/ttorae-pick/data/feed.json np
 - **고객문의 이메일**: (본인 이메일)
 - **앱 로고**: `toss-assets/logo-600.png` (600×600, 불투명 배경)
 - **스크린샷(선택)**: `toss-assets/screenshot-1-youtube.png`, `screenshot-2-community.png`, `screenshot-3-community-50.png` (636×1048)
-- **주요 기능(선택)**: 한글 "오늘의 인기글" / 영문 "Hot Today" / URL `intoss://today-hwaje`
+- **주요 기능(선택)**: 한글 "오늘의 인기글" / 영문 "Hot Today" / URL `intoss://today-issue`
 
 ## 4. 심사 기준에 맞춰 이미 반영한 것
 

@@ -13,7 +13,7 @@ import type { CommunityPost } from './community';
 /** 글 id → 이미지 URL (없으면 null). null도 저장해서 같은 글을 다시 열지 않아요 */
 export type ThumbnailCache = Record<string, string | null>;
 
-const USER_AGENT = 'OneulHwaje/0.1 (+https://github.com/ravithole204-coder/ttorae-pick; community popular-posts aggregator; title+link only)';
+const USER_AGENT = 'TodayIssue/0.1 (+https://github.com/ravithole204-coder/ttorae-pick; community popular-posts aggregator; title+link only)';
 const TIMEOUT_MS = 15_000;
 const GAP_MS = 1_500;
 const PER_SITE_LIMIT = 40;
