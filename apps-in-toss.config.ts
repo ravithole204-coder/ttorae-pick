@@ -5,7 +5,7 @@ import { defineConfig } from '@apps-in-toss/web-framework/config';
  * `npm run build:toss` 를 실행하면 dist/ 를 묶어 콘솔에 올릴 .ait 파일을 만들어요.
  */
 export default defineConfig({
-  appName: 'today-hwaje',
+  appName: 'today-issue',
   webView: {
     // 유튜브 플레이어가 iOS에서 전체화면으로 튀지 않고 화면 안에서 재생되도록
     allowsInlineMediaPlayback: true,

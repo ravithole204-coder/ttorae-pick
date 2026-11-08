@@ -250,7 +250,7 @@ export function App() {
   return (
     <div className="app" style={{ zoom: AGE_SCALE[age] }}>
       <header className="top">
-        <span className="brand">오늘의 화제</span>
+        <span className="brand">오늘의 이슈</span>
         {!IN_TOSS && (
           <button
             type="button"
