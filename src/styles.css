@@ -84,9 +84,25 @@ button {
 }
 
 .brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.3px;
+}
+
+/* 앱 아이콘과 같은 그림. 모서리는 앱 아이콘 비율(약 22%)로, 테두리 대신 10% 외곽선 */
+.brand-logo {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  outline: 1px solid rgba(0, 0, 0, 0.08);
+  outline-offset: -1px;
+}
+
+:root[data-theme='dark'] .brand-logo {
+  outline-color: rgba(255, 255, 255, 0.1);
 }
 
 .theme-btn {
