@@ -1,0 +1,712 @@
+/* 기본(화이트) 테마 */
+:root {
+  --bg: #f2f4f6;
+  --surface: #ffffff;
+  --card: #f4f6f8;
+  --card-hover: #e9ecf0;
+  --text: #191f28;
+  --sub: #4e5968;
+  --muted: #8b95a1;
+  --line: #e5e8eb;
+  --primary: #3182f6;
+  --primary-weak: #e8f3ff;
+  --up: #f04452;
+  --up-weak: #ffecee;
+  --down: #3182f6;
+  --down-weak: #e8f3ff;
+  --growth: #15a35a;
+  --disabled: #b0b8c1;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  color-scheme: light;
+}
+
+/* 다크 테마 — 오른쪽 위 버튼으로 전환 */
+:root[data-theme='dark'] {
+  --bg: #0f1115;
+  --surface: #161920;
+  --card: #1c2029;
+  --card-hover: #232835;
+  --text: #f2f4f8;
+  --sub: #b4bac6;
+  --muted: #7c8595;
+  --line: #2a2f3a;
+  --primary: #5b9cff;
+  --primary-weak: #1b2a44;
+  --up: #ff5c7a;
+  --up-weak: #3a1f2a;
+  --down: #7aa7ff;
+  --down-weak: #1e2a44;
+  --growth: #4ade80;
+  --disabled: #3a4150;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* ---------- 레이아웃 ---------- */
+.app {
+  max-width: 480px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding-bottom: calc(32px + env(safe-area-inset-bottom));
+  background: var(--surface);
+}
+
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 20px;
+  background: var(--surface);
+}
+
+.brand {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.theme-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--card);
+  font-size: 16px;
+}
+
+.hero {
+  padding: 12px 20px 20px;
+}
+
+.hero h1 {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.38;
+  letter-spacing: -0.5px;
+}
+
+.hero h1 em {
+  font-style: normal;
+  color: var(--primary);
+}
+
+/* ---------- 탭 & 필터 ---------- */
+.sticky-nav {
+  position: sticky;
+  top: 56px;
+  z-index: 9;
+  background: var(--surface);
+}
+
+/* 연령대 탭은 커뮤니티 탭 아래에만 있어요 (유튜브는 연령 구분이 없어요) */
+.age-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 10px 20px 0;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.age-tab {
+  flex: 1;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+  transition: background 0.15s, color 0.15s;
+}
+
+.age-tab[aria-selected='true'] {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.tabs {
+  display: flex;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.tab {
+  position: relative;
+  flex: 1;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--muted);
+  transition: color 0.15s;
+}
+
+.tab[aria-selected='true'] {
+  color: var(--text);
+}
+
+.tab[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--text);
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  padding: 14px 20px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chips.categories {
+  padding-top: 10px;
+}
+
+.chip {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--sub);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.chip[aria-pressed='true'] {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--bg);
+}
+
+.chip-gap {
+  flex-shrink: 0;
+  width: 1px;
+  margin: 6px 2px;
+  background: var(--line);
+}
+
+/* ---------- 랭킹 카드 ---------- */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  padding: 14px 12px 0;
+}
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--card);
+  text-align: left;
+  transition: background 0.15s;
+  /* 커뮤니티 카드는 <a> 라서 링크 기본 꾸밈(밑줄·파란색)을 지워요 */
+  color: inherit;
+  text-decoration: none;
+}
+
+.card:active {
+  background: var(--card-hover);
+}
+
+.rank {
+  flex-shrink: 0;
+  width: 22px;
+  padding-top: 14px;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--sub);
+}
+
+.thumb {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  overflow: hidden; /* 세로로 긴 썸네일이 상자 밖으로 삐져나오지 않게 */
+  border-radius: 10px;
+  font-size: 26px;
+}
+
+.thumb.youtube {
+  width: 104px;
+  height: 58px;
+}
+
+.thumb.community {
+  width: 58px;
+  height: 58px;
+  font-size: 24px;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* 사이트 로고는 꽉 채우지 않고 가운데에 작게 */
+.thumb img.logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.dur {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.dur.shorts {
+  background: var(--up);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.42;
+  word-break: keep-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.meta {
+  margin-top: 4px;
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.meta .src {
+  font-weight: 500;
+  color: var(--sub);
+}
+
+.growth-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.growth-line {
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--sub);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.growth-line.muted {
+  color: var(--muted);
+}
+
+.growth {
+  font-weight: 700;
+  color: var(--growth);
+}
+
+.badge {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge.up {
+  background: var(--up-weak);
+  color: var(--up);
+}
+
+.badge.down {
+  background: var(--down-weak);
+  color: var(--down);
+}
+
+.badge.new {
+  background: var(--primary-weak);
+  color: var(--primary);
+}
+
+.badge.same {
+  background: var(--line);
+  color: var(--muted);
+}
+
+.empty {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.note {
+  margin: 16px 20px 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--card);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+  word-break: keep-all;
+}
+
+/* 커뮤니티를 이 연령대로 묶은 근거 (접었다 펼 수 있어요) */
+.basis {
+  margin: 10px 20px 0;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: var(--card);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+  word-break: keep-all;
+}
+
+.basis summary {
+  padding: 14px 0;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.basis summary::-webkit-details-marker {
+  display: none;
+}
+
+.basis summary::before {
+  content: '▸ ';
+}
+
+.basis[open] summary::before {
+  content: '▾ ';
+}
+
+.basis ul {
+  margin: 0;
+  padding: 0 0 14px;
+  list-style: none;
+}
+
+.basis li + li {
+  margin-top: 8px;
+}
+
+.basis b {
+  color: var(--text);
+}
+
+.basis a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* ---------- 버튼 ---------- */
+.cta {
+  display: block;
+  width: 100%;
+  height: 54px;
+  margin-top: 20px;
+  border-radius: 14px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  transition: filter 0.15s, background 0.15s;
+}
+
+.cta:active {
+  filter: brightness(0.92);
+}
+
+.cta:disabled {
+  background: var(--disabled);
+  cursor: default;
+}
+
+.hint {
+  margin-top: 12px;
+  font-size: 13px;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ---------- 바텀시트 ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  animation: fade-in 0.2s ease;
+}
+
+.sheet {
+  width: 100%;
+  max-width: 480px;
+  max-height: 85dvh;
+  overflow-y: auto;
+  padding: 12px 20px calc(24px + env(safe-area-inset-bottom));
+  border-radius: 24px 24px 0 0;
+  background: var(--surface);
+  animation: slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.handle {
+  width: 40px;
+  height: 4px;
+  margin: 0 auto 18px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.sheet h2 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  word-break: keep-all;
+}
+
+.kind-badge {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.kind-badge.youtube {
+  background: var(--up-weak);
+  color: var(--up);
+}
+
+.kind-badge.community {
+  background: var(--primary-weak);
+  color: var(--primary);
+}
+
+.sheet-meta {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.sheet-meta b {
+  font-weight: 600;
+  color: var(--sub);
+}
+
+.sheet-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  object-fit: cover;
+  background: var(--card);
+}
+
+.box {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.box h3 {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sub);
+}
+
+.box p {
+  font-size: 15px;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.box.reason {
+  background: var(--primary-weak);
+}
+
+.box.reason h3 {
+  color: var(--primary);
+}
+
+/* ---------- 영상 재생 화면 ---------- */
+.player {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow-y: auto;
+  background: var(--bg);
+  animation: fade-in 0.2s ease;
+}
+
+.player-top {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+  background: var(--bg);
+}
+
+.back {
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.player-frame {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 16 / 9;
+  margin: 0 auto;
+  background: #000;
+}
+
+.player-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.player-info {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px 20px calc(32px + env(safe-area-inset-bottom));
+}
+
+.player-info h2 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  word-break: keep-all;
+}
+
+.player-channel {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--sub);
+}
+
+.stat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.stat {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sub);
+  text-decoration: none;
+}
+
+.stat.link {
+  color: var(--text);
+}
+
+.player-summary {
+  margin-top: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--sub);
+  word-break: keep-all;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .sheet,
+  .player {
+    animation: none;
+  }
+}
