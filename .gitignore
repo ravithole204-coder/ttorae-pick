@@ -7,6 +7,7 @@ dist
 .omc/
 .DS_Store
 # 수집 프로그램이 만드는 작업 파일 (조회수 기록, AI 분류 캐시)
-data/
+/data/
+/public/data/
 # 토스 콘솔에 올리는 번들 (npm run build:toss 가 만들어요)
 *.ait
