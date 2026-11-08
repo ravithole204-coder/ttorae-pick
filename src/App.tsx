@@ -248,9 +248,10 @@ export function App() {
   const closePlayer = closeOverlay;
 
   return (
-    <div className="app" style={{ zoom: AGE_SCALE[age] }}>
+    // 연령별 글자 키우기는 연령을 고르는 커뮤니티 탭에서만 — 유튜브 탭엔 연령 탭이 없어서 큰 글자를 되돌릴 방법이 없었어요
+    <div className="app" style={{ zoom: tab === 'community' ? AGE_SCALE[age] : 1 }}>
       <header className="top">
-        <span className="brand">매일 매일</span>
+        <span className="brand">매일매일</span>
         {!IN_TOSS && (
           <button
             type="button"
